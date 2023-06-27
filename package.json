@@ -1,0 +1,17 @@
+{
+  "name": "sign-and-broadcast-raw-tx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sign-and-broadcast-raw-tx.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test42": "node test42.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "5.7.1",
+    "dotenv": "14.2.0"
+  }
+}

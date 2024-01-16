@@ -1,37 +1,43 @@
 require('dotenv').config();
-const ethers = require('ethers');
+const { ethers } = require('ethers');
 
 async function signAndBroadcast() {
-    console.log("Started")
+    console.log("Started");
 
     const rawTransaction = process.env.RAW_TRANSACTION;
     const privateKey = process.env.PRIVATE_KEY;
     const rpcURL = process.env.RPC_URL;
 
     // Initialize the provider using the RPC URL
-    const provider = new ethers.providers.JsonRpcProvider(rpcURL);
+    const provider = new ethers.JsonRpcProvider(rpcURL);
 
     // Initialize a new Wallet instance
     const wallet = new ethers.Wallet(privateKey, provider);
 
     // Parse the raw transaction
-    const tx = ethers.utils.parseTransaction(rawTransaction);
+    let tx = ethers.Transaction.from(rawTransaction);
 
-    const {name, chainId} = await provider.getNetwork()
-    tx.nonce = await provider.getTransactionCount(wallet.address)
-    tx.chainId = chainId
-    tx.value = ethers.utils.parseUnits(process.env.VALUE_IN_ETHER, 'ether')
-    tx.gasLimit = process.env.GAS_LIMIT
-    tx.gasPrice = undefined
-    tx.type = 2
-    // tx.maxFeePerGas = ethers.utils.parseUnits(process.env.MAX_FEE_PER_GAS_IN_GWEI, 'gwei')
-    // tx.maxPriorityFeePerGas = ethers.utils.parseUnits(process.env.MAX_PRIORITY_FEE_IN_GWEI, 'gwei')
+    // Fetch network details and update the transaction object
+    const { chainId } = await provider.getNetwork();
+
+    const newTx = {
+        to: tx.to,
+        data: tx.data,
+        chainId: chainId,
+        value: ethers.parseUnits(process.env.VALUE_IN_ETHER, 'ether'),
+        gasLimit: BigInt(process.env.GAS_LIMIT),
+        type: 2,
+
+        nonce: await provider.getTransactionCount(wallet.address),
+        maxFeePerGas: ethers.parseUnits(process.env.MAX_FEE_PER_GAS_IN_GWEI, 'gwei'),
+        maxPriorityFeePerGas: ethers.parseUnits(process.env.MAX_PRIORITY_FEE_IN_GWEI, 'gwei')
+    }
 
     // Sign the transaction
-    const signedTransaction = await wallet.signTransaction(tx);
+    const signedTransaction = await wallet.signTransaction(newTx);
 
     // Send the signed transaction
-    const transactionResponse = await provider.sendTransaction(signedTransaction);
+    const transactionResponse = await provider.broadcastTransaction(signedTransaction);
 
     return transactionResponse;
 }
@@ -43,5 +49,5 @@ signAndBroadcast()
     .catch((error) => {
         console.error('Error:', error);
     }).finally(() => {
-        console.log('Finished')
-    });
+    console.log('Finished');
+});

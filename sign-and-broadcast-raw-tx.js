@@ -1,12 +1,23 @@
 require('dotenv').config();
 const { ethers } = require('ethers');
 
-async function signAndBroadcast() {
+async function signAndBroadcast(injectedEnvvars) {
     console.log("Started");
 
-    const rawTransaction = process.env.RAW_TRANSACTION;
-    const privateKey = process.env.PRIVATE_KEY;
-    const rpcURL = process.env.RPC_URL;
+    let envvars = {
+        rawTx: process.env.RAW_TRANSACTION,
+        privateKey: process.env.PRIVATE_KEY,
+        rpcUrl: process.env.RPC_URL,
+        valueInEther: process.env.VALUE_IN_ETHER,
+        gasLimit: process.env.GAS_LIMIT,
+        maxFeePerGasInGwei: process.env.MAX_FEE_PER_GAS_IN_GWEI,
+        maxPriorFeeInGwei: process.env.MAX_PRIORITY_FEE_IN_GWEI,
+        ...injectedEnvvars
+    }
+
+    const rawTransaction = envvars.rawTx;
+    const privateKey = envvars.privateKey;
+    const rpcURL = envvars.rpcUrl;
 
     // Initialize the provider using the RPC URL
     const provider = new ethers.JsonRpcProvider(rpcURL);
@@ -24,30 +35,25 @@ async function signAndBroadcast() {
         to: tx.to,
         data: tx.data,
         chainId: chainId,
-        value: ethers.parseUnits(process.env.VALUE_IN_ETHER, 'ether'),
-        gasLimit: BigInt(process.env.GAS_LIMIT),
+        value: ethers.parseUnits(envvars.valueInEther, 'ether'),
+        gasLimit: BigInt(envvars.gasLimit),
         type: 2,
 
         nonce: await provider.getTransactionCount(wallet.address),
-        maxFeePerGas: ethers.parseUnits(process.env.MAX_FEE_PER_GAS_IN_GWEI, 'gwei'),
-        maxPriorityFeePerGas: ethers.parseUnits(process.env.MAX_PRIORITY_FEE_IN_GWEI, 'gwei')
+        maxFeePerGas: ethers.parseUnits(envvars.maxFeePerGasInGwei, 'gwei'),
+        maxPriorityFeePerGas: ethers.parseUnits(envvars.maxPriorFeeInGwei, 'gwei')
     }
 
     // Sign the transaction
     const signedTransaction = await wallet.signTransaction(newTx);
 
     // Send the signed transaction
-    const transactionResponse = await provider.broadcastTransaction(signedTransaction);
-
-    return transactionResponse;
-}
-
-signAndBroadcast()
-    .then((transactionResponse) => {
+    try {
+        const transactionResponse = await provider.broadcastTransaction(signedTransaction)
         console.log('Transaction broadcasted, transaction hash:', transactionResponse.hash);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    }).finally(() => {
-    console.log('Finished');
-});
+    } catch (error) {console.error('Error:', error);}
+    finally {
+        console.log('Finished');
+    }
+}
+signAndBroadcast();

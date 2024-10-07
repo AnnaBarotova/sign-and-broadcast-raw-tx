@@ -12,6 +12,5 @@
   "license": "ISC",
   "dependencies": {
     "ethers": "6.10.0",
-    "dotenv": "14.2.0"
   }
 }

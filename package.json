@@ -4,13 +4,14 @@
   "description": "",
   "main": "sign-and-broadcast-raw-tx.js",
   "scripts": {
-    "test": "node sign-and-broadcast-raw-tx.js"
+    "test": "node --env-file=.env sign-and-broadcast-raw-tx.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ethers": "6.13.3"
+    "ethers": "6.13.3",
+    "dotenv": "14.2.0"
   },
   "type": "module"
 }

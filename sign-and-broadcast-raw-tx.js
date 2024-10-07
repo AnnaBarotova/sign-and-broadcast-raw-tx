@@ -3,15 +3,14 @@ import {ethers} from "ethers";
 async function signAndBroadcast(injectedEnvvars) {
     console.log("Started");
 
-    let envvars = {
+    let envvars = injectedEnvvars || {
         rawTx: process.env.RAW_TRANSACTION,
         privateKey: process.env.PRIVATE_KEY,
         rpcUrl: process.env.RPC_URL,
         valueInEther: process.env.VALUE_IN_ETHER,
         gasLimit: process.env.GAS_LIMIT,
         maxFeePerGasInGwei: process.env.MAX_FEE_PER_GAS_IN_GWEI,
-        maxPriorFeeInGwei: process.env.MAX_PRIORITY_FEE_IN_GWEI,
-        ...injectedEnvvars
+        maxPriorFeeInGwei: process.env.MAX_PRIORITY_FEE_IN_GWEI
     }
 
     const rawTransaction = envvars.rawTx;

@@ -1,4 +1,4 @@
-const { ethers } = require('ethers');
+import {ethers} from "ethers";
 
 async function signAndBroadcast(injectedEnvvars) {
     console.log("Started");

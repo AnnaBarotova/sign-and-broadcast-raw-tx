@@ -1,6 +1,7 @@
 import {ethers} from "ethers";
+import fs from "fs";
 
-async function signAndBroadcast(injectedEnvvars) {
+ export async function signAndBroadcast(injectedEnvvars) {
     console.log("Started");
 
     let envvars = injectedEnvvars || {
@@ -49,9 +50,9 @@ async function signAndBroadcast(injectedEnvvars) {
     try {
         const transactionResponse = await provider.broadcastTransaction(signedTransaction)
         console.log('Transaction broadcasted, transaction hash:', transactionResponse.hash);
+      fs.appendFileSync('tx-list.csv', `${rawTransaction}\n`);
     } catch (error) {console.error('Error:', error);}
     finally {
         console.log('Finished');
     }
 }
-signAndBroadcast();

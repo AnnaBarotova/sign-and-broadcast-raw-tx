@@ -50,7 +50,7 @@ import fs from "fs";
     try {
         const transactionResponse = await provider.broadcastTransaction(signedTransaction)
         console.log('Transaction broadcasted, transaction hash:', transactionResponse.hash);
-      fs.appendFileSync('tx-list.csv', `${rawTransaction}\n`);
+      fs.appendFileSync('tx-list.csv', `${transactionResponse.hash}\n`);
     } catch (error) {console.error('Error:', error);}
     finally {
         console.log('Finished');

@@ -50,7 +50,6 @@ async function getTxs() {
           console.error(`Error processing wallet ${wallet.address}:`, error);
         }
 
-        // Пауза на 3 секунды перед следующим запросом
         await delay(1500);
       }
 

@@ -41,7 +41,8 @@ async function runSignAndBroadcast(){
         fs.appendFileSync('tx-list.csv', `${accountData.address};`);
 
         await signAndBroadcast(envvars)
-        await delay(1500);
+        //delay 100 ms causes a ~5 txs to pass into 1 block
+        await delay(100);
       }
       console.log('All requests completed.');
     });

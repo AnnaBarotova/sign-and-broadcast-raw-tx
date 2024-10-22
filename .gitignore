@@ -130,9 +130,9 @@ dist
 
 #keys and txs files
 /stake/address-key-rawTx.csv
-#/stake/addressAndPK.csv
+/stake/addressAndPK.csv
 /stake/tx-list.csv
 
 /withdraw/address-key-rawTx.csv
-#/withdraw/addressAndPK.csv
+/withdraw/addressAndPK.csv
 /withdraw/tx-list.csv

@@ -129,6 +129,10 @@ dist
 .pnp.*
 
 #keys and txs files
-/address-key-rawTx.csv
-/addressAndPK.csv
-/tx-list.csv
+/stake/address-key-rawTx.csv
+/stake/addressAndPK.csv
+/stake/tx-list.csv
+
+/withdraw/address-key-rawTx.csv
+/withdraw/addressAndPK.csv
+/withdraw/tx-list.csv

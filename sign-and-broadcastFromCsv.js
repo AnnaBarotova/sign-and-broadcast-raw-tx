@@ -1,25 +1,22 @@
 import csv from "csv-parser";
 import fs from "fs"
 import {signAndBroadcast} from "./sign-and-broadcast-raw-tx.js";
+import {delay} from "./helpers/delay.js";
 
-async function runSignAndBroadcast(){
+export async function runSignAndBroadcast(valueInEther) {
   fs.writeFileSync('tx-list.csv', ''); // Очищаем файл перед записью
 
   let envvars = {
     rawTx: '',
     privateKey: '',
     rpcUrl: "https://ethereum-holesky-rpc.publicnode.com",
-    valueInEther: "32",
+    valueInEther: valueInEther.toString(),
     gasLimit: "1000000",
     maxFeePerGasInGwei: "50",
     maxPriorFeeInGwei: "1"
   }
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 
   const results = [];
-
 
   // Читаем CSV файл
   fs.createReadStream('address-key-rawTx.csv')
@@ -47,4 +44,3 @@ async function runSignAndBroadcast(){
       console.log('All requests completed.');
     });
 }
-runSignAndBroadcast();
